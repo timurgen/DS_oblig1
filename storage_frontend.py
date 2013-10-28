@@ -22,11 +22,15 @@ MAX_CONTENT_LENGHT = 1024  # Maximum length of the content of the http request (
 MAX_STORAGE_SIZE = 104857600  # Maximum total storage allowed (100 megabytes)
 FRONTEND_NAME = "rocks.cs.uit.no"  # name of frontend (master node)
 SERVICE_TYPE = "_http._tcp.local."
-# SERVICE_NAME_SLAVE = "BackendNode"
+# SERVICE_NAME_SLAVE = "BackendNode" #use hostname instead of
 APPLICATION_PORT = 23667
 
 storageBackendNodes = []
 httpdServeRequests = True
+
+"""
+
+"""
 
 
 class StorageServerFrontend:
@@ -69,7 +73,12 @@ class StorageServerFrontend:
         self.map[key] = value
 
 
-class FrontendHttpHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+"""
+
+"""
+
+
+class HttpRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     global frontend
     frontend = StorageServerFrontend()
 
@@ -145,9 +154,13 @@ class FrontendHTTPServer(BaseHTTPServer.HTTPServer):
         while self.run == True:
             self.handle_request()
 
-    #
-# <p>Mdns Browser
-# <p>Used discover and present other nodes
+            #
+
+            # <p>Mdns Browser
+
+            # <p>Used discover and present other nodes
+
+
 class StorageServerDiscovery(object):
     def __init__(self):
         self.r = Zeroconf()
@@ -177,7 +190,7 @@ if __name__ == '__main__':
     httpserver_port = APPLICATION_PORT
     # Start the webserver which handles incomming requests
     try:
-        httpd = FrontendHTTPServer(("", httpserver_port), FrontendHttpHandler)
+        httpd = FrontendHTTPServer(("", httpserver_port), HttpRequestHandler)
         server_thread = threading.Thread(target=httpd.serve)
         server_thread.daemon = True
         server_thread.start()
